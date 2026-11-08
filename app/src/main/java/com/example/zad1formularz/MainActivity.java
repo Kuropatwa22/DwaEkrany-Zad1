@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,7 +21,23 @@ public class MainActivity extends AppCompatActivity {
     TextView tvLevelValue;
     CheckBox cbNewsletter;
 
+    private final ActivityResultLauncher<Intent> summaryLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+
+                        if (result.getResultCode() == RESULT_OK
+                                && result.getData() != null) {
+
+                            String number = result.getData()
+                                    .getStringExtra(SummaryActivity.EXTRA_NUMBER);
+
+                            showRegistered(number);
+                        }
+                    });
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -82,6 +100,16 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(SummaryActivity.EXTRA_NEWSLETTER,
                 cbNewsletter.isChecked());
 
-        startActivity(intent);
+        summaryLauncher.launch(intent);
     }
+
+    private void showRegistered(String number) {
+
+        android.widget.Toast.makeText(
+                this,
+                getString(R.string.registered, number),
+                android.widget.Toast.LENGTH_LONG
+        ).show();
+    }
+
 }

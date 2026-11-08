@@ -4,7 +4,7 @@ package com.example.zad1formularz;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
-
+import java.util.Random;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SummaryActivity extends AppCompatActivity {
@@ -16,7 +16,7 @@ public class SummaryActivity extends AppCompatActivity {
     public static final String EXTRA_NEWSLETTER = "NEWSLETTER";
 
     TextView tvSummary;
-
+    public static final String EXTRA_NUMBER = "NUMBER";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +26,7 @@ public class SummaryActivity extends AppCompatActivity {
         tvSummary.setText(buildSummary());
 
         findViewById(R.id.btnEdit).setOnClickListener(v -> finish());
+        findViewById(R.id.btnConfirm).setOnClickListener(v -> confirm());
     }
 
     private String buildSummary() {
@@ -49,4 +50,16 @@ public class SummaryActivity extends AppCompatActivity {
                 R.string.summary_format,
                 name, email, course, level, newsletterText);
     }
+
+    private void confirm() {
+
+        String number = "ZG/" + (1000 + new Random().nextInt(9000));
+
+        Intent result = new Intent();
+        result.putExtra(EXTRA_NUMBER, number);
+
+        setResult(RESULT_OK, result);
+        finish();
+    }
+
 }
